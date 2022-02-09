@@ -16,6 +16,10 @@ class JSONUtils {
         private val KEY_VOTE_AVERAGE = "vote_average"
         private val KEY_RELEASE_DATE = "release_date"
 
+        const val BASE_POSTER_URL = "https://image.tmdb.org/t/p/"
+        const val SMALL_POSTER_SIZE = "w185"
+        const val BIG_POSTER_SIZE = "w780"
+
         fun getMovieFromJSON(jsonObject: JSONObject): ArrayList<Movie> {
             val result: ArrayList<Movie> = arrayListOf()
             val jsonArray = jsonObject.getJSONArray(KEY_RESULT)
@@ -27,7 +31,9 @@ class JSONUtils {
                     val title = getString(KEY_TITLE)
                     val originalTitle = getString(KEY_ORIGINAL_TITLE)
                     val overview = getString(KEY_OVERVIEW)
-                    val posterPath = getString(KEY_POSTER_PATH)
+                    val posterPath = BASE_POSTER_URL + SMALL_POSTER_SIZE + getString(KEY_POSTER_PATH)
+                    val bigPosterPath = BASE_POSTER_URL + BIG_POSTER_SIZE + getString(
+                        KEY_POSTER_PATH)
                     val backdropPath = getString(KEY_BACKDROP_PATH)
                     val voteAverage = getDouble(KEY_VOTE_AVERAGE)
                     val releaseDate = getString(KEY_RELEASE_DATE)
@@ -38,6 +44,7 @@ class JSONUtils {
                         originalTitle,
                         overview,
                         posterPath,
+                        bigPosterPath,
                         backdropPath,
                         voteAverage,
                         releaseDate
