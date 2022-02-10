@@ -1,4 +1,4 @@
-package com.android.mymovies
+package com.android.mymovies.data
 
 data class Movie(
     val id: Int,

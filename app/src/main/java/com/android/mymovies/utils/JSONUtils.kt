@@ -1,6 +1,6 @@
 package com.android.mymovies.utils
 
-import com.android.mymovies.Movie
+import com.android.mymovies.data.Movie
 import org.json.JSONObject
 
 class JSONUtils {

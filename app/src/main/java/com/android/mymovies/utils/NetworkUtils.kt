@@ -23,6 +23,7 @@ class NetworkUtils {
         private val SORT_BY_TOP_RATED = "vote_average.desc"
 
         const val POPULARITY = 0
+        const val TOP_RATED = 1
 
         private fun buildURL(sortBy: Int, page: Int): URL? {
             val methodOfSort = if (sortBy == POPULARITY) SORT_BY_POPULARITY else SORT_BY_TOP_RATED
