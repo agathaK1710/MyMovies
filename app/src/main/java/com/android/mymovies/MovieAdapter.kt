@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.mymovies.data.Movie
 import com.squareup.picasso.Picasso
 
-class MovieAdapter(var movies: ArrayList<Movie>) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
+class MovieAdapter(var movies: List<Movie>) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
     private lateinit var posterClickListener: PosterClickListener
     private lateinit var reachEndListener: ReachEndListener
 

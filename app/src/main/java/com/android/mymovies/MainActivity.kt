@@ -7,8 +7,12 @@ import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.mymovies.data.MainViewModel
 import com.android.mymovies.data.Movie
 import com.android.mymovies.utils.JSONUtils
 import com.android.mymovies.utils.NetworkUtils
@@ -19,10 +23,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapter: MovieAdapter
     private lateinit var popularity: TextView
     private lateinit var top_rated: TextView
+    private lateinit var viewModel: MainViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         val movies: ArrayList<Movie> = arrayListOf()
         popularity = findViewById(R.id.popularity)
         top_rated = findViewById(R.id.top_rated)
@@ -59,6 +65,12 @@ class MainActivity : AppCompatActivity() {
         }
         switch.isChecked = false
 
+        val movieLiveData = viewModel.movie
+        movieLiveData.observe(this) { mov ->
+            adapter.movies = mov
+            adapter.notifyDataSetChanged()
+        }
+
     }
 
     fun setMethodOfSort(isChecked: Boolean) {
@@ -71,10 +83,17 @@ class MainActivity : AppCompatActivity() {
             top_rated.setTextColor(resources.getColor(R.color.white))
             NetworkUtils.POPULARITY
         }
-        val jsonObject = NetworkUtils.getJSONObject(methodOfSort, 1)
-        val jsonArray = JSONUtils.getMovieFromJSON(jsonObject)
+        downloadData(methodOfSort, 1)
+    }
 
-        adapter.movies = jsonArray
-        adapter.notifyDataSetChanged()
+    fun downloadData(methodOfSort: Int, page: Int){
+        val jsonObject = NetworkUtils.getJSONObject(methodOfSort, page)
+        val jsonArray = JSONUtils.getMovieFromJSON(jsonObject)
+        if(jsonArray.isNotEmpty()){
+            viewModel.deleteAllMovies()
+            for (movie in jsonArray){
+                viewModel.insertMovie(movie)
+            }
+        }
     }
 }

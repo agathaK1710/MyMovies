@@ -1,7 +1,11 @@
 package com.android.mymovies.data
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "movies")
 data class Movie(
-    val id: Int,
+    @PrimaryKey val id: Int,
     val voteCount: Int,
     val title: String,
     val originTitle: String,
