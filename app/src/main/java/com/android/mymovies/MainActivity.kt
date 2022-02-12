@@ -1,7 +1,9 @@
 package com.android.mymovies
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.CompoundButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 
@@ -37,14 +39,18 @@ class MainActivity : AppCompatActivity() {
         adapter = MovieAdapter(movies)
         adapter.setPosterClickListener(object : MovieAdapter.PosterClickListener {
             override fun onPosterClick(position: Int) {
-                Toast.makeText(this@MainActivity,
-                    position.toString(), Toast.LENGTH_SHORT).show()
+                val movie = adapter.movies[position]
+                val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                intent.putExtra("id", movie.id)
+                startActivity(intent)
             }
         })
         adapter.setReachEndListener(object : MovieAdapter.ReachEndListener {
             override fun onReachEnd() {
-                Toast.makeText(this@MainActivity,
-                    "The end of list", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@MainActivity,
+                    "The end of list", Toast.LENGTH_SHORT
+                ).show()
             }
         })
         rV.adapter = adapter
@@ -70,7 +76,6 @@ class MainActivity : AppCompatActivity() {
             adapter.movies = mov
             adapter.notifyDataSetChanged()
         }
-
     }
 
     fun setMethodOfSort(isChecked: Boolean) {
@@ -86,12 +91,12 @@ class MainActivity : AppCompatActivity() {
         downloadData(methodOfSort, 1)
     }
 
-    fun downloadData(methodOfSort: Int, page: Int){
+    fun downloadData(methodOfSort: Int, page: Int) {
         val jsonObject = NetworkUtils.getJSONObject(methodOfSort, page)
         val jsonArray = JSONUtils.getMovieFromJSON(jsonObject)
-        if(jsonArray.isNotEmpty()){
+        if (jsonArray.isNotEmpty()) {
             viewModel.deleteAllMovies()
-            for (movie in jsonArray){
+            for (movie in jsonArray) {
                 viewModel.insertMovie(movie)
             }
         }

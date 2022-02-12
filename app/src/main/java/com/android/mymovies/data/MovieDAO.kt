@@ -12,8 +12,14 @@ interface MovieDAO {
     @Query("SELECT * FROM movies")
     fun getAllMovies(): LiveData<List<Movie>>
 
+    @Query("SELECT * FROM favouritesMovie")
+    fun getAllFavouriteMovies(): LiveData<List<FavouriteMovie>>
+
     @Query("SELECT * FROM movies WHERE id == :movieId")
     fun getMovieById(movieId: Int): Movie
+
+    @Query("SELECT * FROM favouritesMovie WHERE id == :movieId")
+    fun getFavouriteMovieById(movieId: Int): FavouriteMovie
 
     @Query("DELETE FROM movies")
     fun deleteAllMovies()
@@ -23,4 +29,10 @@ interface MovieDAO {
 
     @Delete
     fun deleteMovie(movie: Movie)
+
+    @Insert
+    fun insertFavouriteMovie(movie: FavouriteMovie)
+
+    @Delete
+    fun deleteFavouriteMovie(movie: FavouriteMovie)
 }

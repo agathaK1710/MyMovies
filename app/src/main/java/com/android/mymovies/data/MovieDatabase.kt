@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 const val DB_NAME = "movies.db"
-@Database(entities = [Movie:: class], version = 1, exportSchema = false)
-abstract class MovieDatabase: RoomDatabase(){
+
+@Database(entities = [Movie::class, FavouriteMovie::class], version = 2, exportSchema = false)
+abstract class MovieDatabase : RoomDatabase() {
 
     companion object {
         var database: MovieDatabase? = null
@@ -15,13 +16,15 @@ abstract class MovieDatabase: RoomDatabase(){
 
         fun getInstance(context: Context): MovieDatabase {
             synchronized(lock) {
-                if(database == null) {
+                if (database == null) {
                     database =
-                        Room.databaseBuilder(context, MovieDatabase::class.java, DB_NAME).build()
+                        Room.databaseBuilder(context, MovieDatabase::class.java, DB_NAME)
+                            .fallbackToDestructiveMigration().build()
                 }
                 return database!!
             }
         }
     }
+
     abstract fun movieDao(): MovieDAO
 }
