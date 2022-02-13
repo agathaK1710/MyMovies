@@ -16,4 +16,11 @@ data class Movie(
     val voteAverage: Double,
     val releaseDate: String
 ) {
+    companion object{
+        fun favouriteMovieAsMovie(movie: FavouriteMovie): Movie{
+            return Movie(movie.id, movie.voteCount, movie.title,
+                movie.originTitle, movie.overview, movie.posterPath, movie.bigPosterPath,
+                movie.backDropPath, movie.voteAverage, movie.releaseDate)
+        }
+    }
 }

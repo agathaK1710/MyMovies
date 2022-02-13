@@ -2,6 +2,9 @@ package com.android.mymovies
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.CompoundButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -27,6 +30,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var top_rated: TextView
     private lateinit var viewModel: MainViewModel
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = MenuInflater(this)
+        inflater.inflate(R.menu.main_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        when (id){
+            R.id.item_main -> {
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.item_favourite -> {
+                val intent = Intent(this, FavouriteActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -45,14 +69,14 @@ class MainActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         })
-        adapter.setReachEndListener(object : MovieAdapter.ReachEndListener {
-            override fun onReachEnd() {
-                Toast.makeText(
-                    this@MainActivity,
-                    "The end of list", Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
+//        adapter.setReachEndListener(object : MovieAdapter.ReachEndListener {
+//            override fun onReachEnd() {
+//                Toast.makeText(
+//                    this@MainActivity,
+//                    "The end of list", Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        })
         rV.adapter = adapter
         rV.layoutManager = GridLayoutManager(this, 2)
         switch.isChecked = true

@@ -6,8 +6,10 @@
         <entry key="..\:/Kotlin/AS/Head First/app/src/main/res/drawable/ic_baseline_star_rate_24.xml" value="0.177" />
         <entry key="..\:/Kotlin/AS/Head First/app/src/main/res/drawable/star_yellow.xml" value="0.177" />
         <entry key="..\:/Kotlin/AS/Head First/app/src/main/res/layout/activity_detail.xml" value="0.25416666666666665" />
+        <entry key="..\:/Kotlin/AS/Head First/app/src/main/res/layout/activity_favourite.xml" value="0.25416666666666665" />
         <entry key="..\:/Kotlin/AS/Head First/app/src/main/res/layout/activity_main.xml" value="0.25416666666666665" />
         <entry key="..\:/Kotlin/AS/Head First/app/src/main/res/layout/item_movie.xml" value="0.25052083333333336" />
+        <entry key="..\:/Kotlin/AS/Head First/app/src/main/res/menu/main_menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>
