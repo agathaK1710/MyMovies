@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.loader.app.LoaderManager
+import androidx.loader.content.Loader
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.mymovies.adapters.MovieAdapter
@@ -18,14 +20,17 @@ import com.android.mymovies.data.MainViewModel
 import com.android.mymovies.data.Movie
 import com.android.mymovies.utils.JSONUtils
 import com.android.mymovies.utils.NetworkUtils
+import org.json.JSONObject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObject> {
     private lateinit var rV: RecyclerView
     private lateinit var switch: SwitchCompat
     private lateinit var adapter: MovieAdapter
     private lateinit var popularity: TextView
     private lateinit var top_rated: TextView
     private lateinit var viewModel: MainViewModel
+    private val LOADER_ID = 170
+    private lateinit var loaderManager: LoaderManager
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = MenuInflater(this)
@@ -35,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        when (id){
+        when (id) {
             R.id.item_main -> {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
@@ -51,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        loaderManager = LoaderManager.getInstance(this)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         val movies: ArrayList<Movie> = arrayListOf()
         popularity = findViewById(R.id.popularity)
@@ -113,13 +119,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun downloadData(methodOfSort: Int, page: Int) {
-        val jsonObject = NetworkUtils.getJSONObject(methodOfSort, page)
-        val jsonArray = JSONUtils.getMovieFromJSON(jsonObject)
+        val url = NetworkUtils.buildURL(methodOfSort, page)
+        val bundle = Bundle()
+        bundle.putString("url", url.toString())
+        loaderManager.restartLoader(LOADER_ID, bundle, this)
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<JSONObject?> {
+        return NetworkUtils.Companion.JSONLoader(this, args)
+    }
+
+    override fun onLoadFinished(loader: Loader<JSONObject>, data: JSONObject?) {
+        val jsonArray = JSONUtils.getMovieFromJSON(data)
         if (jsonArray.isNotEmpty()) {
             viewModel.deleteAllMovies()
             for (movie in jsonArray) {
                 viewModel.insertMovie(movie)
             }
         }
+        loaderManager.destroyLoader(LOADER_ID)
+    }
+
+    override fun onLoaderReset(loader: Loader<JSONObject>) {
+        TODO("Not yet implemented")
     }
 }

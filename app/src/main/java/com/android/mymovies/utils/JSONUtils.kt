@@ -27,10 +27,10 @@ class JSONUtils {
         const val SMALL_POSTER_SIZE = "w185"
         const val BIG_POSTER_SIZE = "w780"
 
-        fun getMovieFromJSON(jsonObject: JSONObject): ArrayList<Movie> {
+        fun getMovieFromJSON(jsonObject: JSONObject?): ArrayList<Movie> {
             val result: ArrayList<Movie> = arrayListOf()
-            val jsonArray = jsonObject.getJSONArray(KEY_RESULT)
-            for (i in 0 until jsonArray.length()) {
+            val jsonArray = jsonObject?.getJSONArray(KEY_RESULT)
+            for (i in 0 until jsonArray?.length()!!) {
                 val jsonMovie = jsonArray.getJSONObject(i)
                 with(jsonMovie) {
                     val voteCount = getInt(KEY_VOTE_COUNT)
