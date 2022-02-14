@@ -6,17 +6,14 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.CompoundButton
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.mymovies.adapters.MovieAdapter
 import com.android.mymovies.data.MainViewModel
 import com.android.mymovies.data.Movie
 import com.android.mymovies.utils.JSONUtils

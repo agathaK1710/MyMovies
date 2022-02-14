@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.android.mymovies.adapters.MovieAdapter
 import com.android.mymovies.data.FavouriteMovie
 import com.android.mymovies.data.MainViewModel
 import com.android.mymovies.data.Movie

@@ -1,6 +1,8 @@
 package com.android.mymovies.utils
 
 import com.android.mymovies.data.Movie
+import com.android.mymovies.data.Review
+import com.android.mymovies.data.Trailer
 import org.json.JSONObject
 
 class JSONUtils {
@@ -16,6 +18,11 @@ class JSONUtils {
         private val KEY_VOTE_AVERAGE = "vote_average"
         private val KEY_RELEASE_DATE = "release_date"
 
+        private val KEY_AUTHOR = "author"
+        private val KEY_CONTENT = "content"
+        private val KEY_OF_VIDEO = "key"
+        private val KEY_OF_NAME = "name"
+        private val BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v="
         const val BASE_POSTER_URL = "https://image.tmdb.org/t/p/"
         const val SMALL_POSTER_SIZE = "w185"
         const val BIG_POSTER_SIZE = "w780"
@@ -51,6 +58,30 @@ class JSONUtils {
                     )
                     result.add(movie)
                 }
+            }
+            return result
+        }
+
+        fun getReviewFromJSON(jsonObject: JSONObject): ArrayList<Review>{
+            val result: ArrayList<Review> = arrayListOf()
+            val jsonArray = jsonObject.getJSONArray(KEY_RESULT)
+            for(i in 0 until jsonArray.length()){
+                val json = jsonArray.getJSONObject(i)
+                val author = json.getString(KEY_AUTHOR)
+                val content = json.getString(KEY_CONTENT)
+                result.add(Review(author, content))
+            }
+            return result
+        }
+
+        fun getTrailerFromJSON(jsonObject: JSONObject): ArrayList<Trailer>{
+            val result: ArrayList<Trailer> = arrayListOf()
+            val jsonArray = jsonObject.getJSONArray(KEY_RESULT)
+            for(i in 0 until jsonArray.length()){
+                val json = jsonArray.getJSONObject(i)
+                val key = BASE_YOUTUBE_URL + json.getString(KEY_OF_VIDEO)
+                val name = json.getString(KEY_OF_NAME)
+                result.add(Trailer(key, name))
             }
             return result
         }

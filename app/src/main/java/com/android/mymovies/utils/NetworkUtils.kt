@@ -12,6 +12,8 @@ import java.net.URL
 class NetworkUtils {
     companion object {
         private val BASE_URL = "https://api.themoviedb.org/3/discover/movie"
+        private val BASE_URL_VIDEOS = "https://api.themoviedb.org/3/movie/%s/videos"
+        private val BASE_URL_REVIEWS = "https://api.themoviedb.org/3/movie/%s/reviews"
         private val PARAMS_API_KEY = "api_key"
         private val PARAMS_LANGUAGE = "language"
         private val PARAMS_SORT_BY = "sort_by"
@@ -25,7 +27,23 @@ class NetworkUtils {
         const val POPULARITY = 0
         const val TOP_RATED = 1
 
-        private fun buildURL(sortBy: Int, page: Int): URL? {
+        private fun buildURLForVideos(id: Int): URL{
+            val uri = Uri.parse(String.format(BASE_URL_VIDEOS, id)).buildUpon()
+                .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+                .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
+                .build()
+            return URL(uri.toString())
+        }
+
+        private fun buildURLForReviews(id: Int): URL{
+            val uri = Uri.parse(String.format(BASE_URL_REVIEWS, id)).buildUpon()
+                .appendQueryParameter(PARAMS_API_KEY, API_KEY)
+
+                .build()
+            return URL(uri.toString())
+        }
+
+        private fun buildURL(sortBy: Int, page: Int): URL {
             val methodOfSort = if (sortBy == POPULARITY) SORT_BY_POPULARITY else SORT_BY_TOP_RATED
             val uri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
@@ -38,6 +56,16 @@ class NetworkUtils {
 
         fun getJSONObject(sortBy: Int, page: Int): JSONObject{
             val url = buildURL(sortBy, page)
+            return JSONLoadTask().execute(url).get()
+        }
+
+        fun getJSONObjectForVideos(id: Int): JSONObject{
+            val url = buildURLForVideos(id)
+            return JSONLoadTask().execute(url).get()
+        }
+
+        fun getJSONObjectForReviews(id: Int): JSONObject{
+            val url = buildURLForReviews(id)
             return JSONLoadTask().execute(url).get()
         }
 

@@ -1,10 +1,11 @@
-package com.android.mymovies
+package com.android.mymovies.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.android.mymovies.R
 import com.android.mymovies.data.Movie
 import com.squareup.picasso.Picasso
 
