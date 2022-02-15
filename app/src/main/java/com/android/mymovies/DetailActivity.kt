@@ -19,6 +19,7 @@ import com.android.mymovies.data.*
 import com.android.mymovies.utils.JSONUtils
 import com.android.mymovies.utils.NetworkUtils
 import com.squareup.picasso.Picasso
+import java.util.*
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var imageView: ImageView
@@ -34,6 +35,7 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var reviewAdapter: ReviewAdapter
     private var favouriteMovie: FavouriteMovie? = null
     private lateinit var favouriteView: ImageView
+    private lateinit var lang: String
     private var id: Int? = null
     private var movie: Movie? = null
 
@@ -59,13 +61,14 @@ class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        lang = Locale.getDefault().language
         imageView = findViewById(R.id.imageViewBigPoster)
         title = findViewById(R.id.textViewTitle)
         originalTitle = findViewById(R.id.textViewOriginalTitle)
         rating = findViewById(R.id.textViewRating)
         date = findViewById(R.id.textViewDate)
         description = findViewById(R.id.textViewDescription)
-        favouriteView = findViewById(R.id.imageViewSaveFavoirite)
+        favouriteView = findViewById(R.id.imageViewSaveFavourite)
 
         id = intent.extras?.getInt("id")
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
@@ -78,15 +81,14 @@ class DetailActivity : AppCompatActivity() {
         description.text = movie?.overview.toString()
         setFavourite()
 
-        val jsonReview = movie?.let { NetworkUtils.getJSONObjectForReviews(it.id) }
-        val jsonTrailer = movie?.let { NetworkUtils.getJSONObjectForVideos(it.id) }
+        val jsonReview = movie?.let { NetworkUtils.getJSONObjectForReviews(it.id, lang) }
+        val jsonTrailer = movie?.let { NetworkUtils.getJSONObjectForVideos(it.id, lang) }
         val reviews = JSONUtils.getReviewFromJSON(jsonReview!!)
         val trailers = JSONUtils.getTrailerFromJSON(jsonTrailer!!)
         rVReviews = findViewById(R.id.recycler_review)
         reviewAdapter = ReviewAdapter(reviews)
         rVReviews.adapter = reviewAdapter
         rVReviews.layoutManager = LinearLayoutManager(this)
-
         rVTrailers = findViewById(R.id.recycler_video)
         trailerAdapter = TrailerAdapter(trailers)
         rVTrailers.adapter = trailerAdapter

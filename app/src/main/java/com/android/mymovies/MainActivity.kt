@@ -2,6 +2,7 @@ package com.android.mymovies
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -22,6 +23,8 @@ import com.android.mymovies.data.Movie
 import com.android.mymovies.utils.JSONUtils
 import com.android.mymovies.utils.NetworkUtils
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObject> {
     private lateinit var rV: RecyclerView
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
     private lateinit var popularity: TextView
     private lateinit var top_rated: TextView
     private lateinit var viewModel: MainViewModel
+    private lateinit var lang: String
     private var methodOfSort: Int = 0
     private val LOADER_ID = 170
 //    private var page = 1
@@ -57,9 +61,16 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
         return super.onOptionsItemSelected(item)
     }
 
+    private fun getColumnCount(): Int{
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val width = (displayMetrics.widthPixels / displayMetrics.density).toInt()
+        return if (width / 185 > 2)  width/185 else 2
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        lang = Locale.getDefault().language
         loaderManager = LoaderManager.getInstance(this)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         val movies: ArrayList<Movie> = arrayListOf()
@@ -84,7 +95,7 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
 //            }
 //        })
         rV.adapter = adapter
-        rV.layoutManager = GridLayoutManager(this, 2)
+        rV.layoutManager = GridLayoutManager(this, getColumnCount())
         switch.isChecked = true
         switch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
@@ -121,7 +132,7 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
     }
 
     fun downloadData(methodOfSort: Int, page: Int) {
-        val url = NetworkUtils.buildURL(methodOfSort, page)
+        val url = NetworkUtils.buildURL(methodOfSort, page, lang)
         val bundle = Bundle()
         bundle.putString("url", url.toString())
         loaderManager.restartLoader(LOADER_ID, bundle, this)

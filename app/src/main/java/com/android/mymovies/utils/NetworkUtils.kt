@@ -25,7 +25,6 @@ class NetworkUtils {
         private val PARANS_MIN_VOTE_COUNT = "vote_count.gte"
 
         private val API_KEY = "cdcf6a1d2e71771f370a0beaed0070a4"
-        private val LANGUAGE_VALUE = "ru-RU"
         private val SORT_BY_POPULARITY = "popularity.desc"
         private val SORT_BY_TOP_RATED = "vote_average.desc"
         private val MIN_VOTE_COUNT_VALUE = "1000"
@@ -33,27 +32,27 @@ class NetworkUtils {
         const val POPULARITY = 0
         const val TOP_RATED = 1
 
-         fun buildURLForVideos(id: Int): URL{
+         fun buildURLForVideos(id: Int, lang: String): URL{
             val uri = Uri.parse(String.format(BASE_URL_VIDEOS, id)).buildUpon()
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
-                .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
+                .appendQueryParameter(PARAMS_LANGUAGE, lang)
                 .build()
             return URL(uri.toString())
         }
 
-         fun buildURLForReviews(id: Int): URL{
+         fun buildURLForReviews(id: Int, lang: String): URL{
             val uri = Uri.parse(String.format(BASE_URL_REVIEWS, id)).buildUpon()
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
-
+                .appendQueryParameter(PARAMS_LANGUAGE, lang)
                 .build()
             return URL(uri.toString())
         }
 
-         fun buildURL(sortBy: Int, page: Int): URL {
+         fun buildURL(sortBy: Int, page: Int, lang: String): URL {
             val methodOfSort = if (sortBy == POPULARITY) SORT_BY_POPULARITY else SORT_BY_TOP_RATED
             val uri = Uri.parse(BASE_URL).buildUpon()
                 .appendQueryParameter(PARAMS_API_KEY, API_KEY)
-                .appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE_VALUE)
+                .appendQueryParameter(PARAMS_LANGUAGE, lang)
                 .appendQueryParameter(PARAMS_SORT_BY, methodOfSort)
                 .appendQueryParameter(PARAMS_PAGE, page.toString())
                 .appendQueryParameter(PARANS_MIN_VOTE_COUNT, MIN_VOTE_COUNT_VALUE)
@@ -61,18 +60,18 @@ class NetworkUtils {
             return URL(uri.toString())
         }
 
-        fun getJSONObject(sortBy: Int, page: Int): JSONObject{
-            val url = buildURL(sortBy, page)
+        fun getJSONObject(sortBy: Int, page: Int, lang: String): JSONObject{
+            val url = buildURL(sortBy, page, lang)
             return JSONLoadTask().execute(url).get()
         }
 
-        fun getJSONObjectForVideos(id: Int): JSONObject{
-            val url = buildURLForVideos(id)
+        fun getJSONObjectForVideos(id: Int, lang: String): JSONObject{
+            val url = buildURLForVideos(id, lang)
             return JSONLoadTask().execute(url).get()
         }
 
-        fun getJSONObjectForReviews(id: Int): JSONObject{
-            val url = buildURLForReviews(id)
+        fun getJSONObjectForReviews(id: Int, lang: String): JSONObject{
+            val url = buildURLForReviews(id, lang)
             return JSONLoadTask().execute(url).get()
         }
 
