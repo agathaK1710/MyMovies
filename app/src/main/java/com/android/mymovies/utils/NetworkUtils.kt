@@ -77,6 +77,15 @@ class NetworkUtils {
         }
 
         class JSONLoader(context: Context, val bundle: Bundle?): AsyncTaskLoader<JSONObject?>(context) {
+//            private lateinit var onStartLoadingListener: OnStartLoadingListener
+//
+//            interface OnStartLoadingListener{
+//                fun onStartLoading(){}
+//            }
+//
+//            fun setOnStartLoadingListener(listener: OnStartLoadingListener){
+//                onStartLoadingListener = listener
+//            }
             override fun loadInBackground(): JSONObject? {
                 if(bundle == null) return null
                 val urlAsString = bundle.getString("url")
@@ -103,6 +112,7 @@ class NetworkUtils {
 
             override fun onStartLoading() {
                 super.onStartLoading()
+//                onStartLoadingListener.onStartLoading()
                 forceLoad()
             }
         }

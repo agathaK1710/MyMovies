@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.CompoundButton
 import android.widget.TextView
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
@@ -29,7 +30,10 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
     private lateinit var popularity: TextView
     private lateinit var top_rated: TextView
     private lateinit var viewModel: MainViewModel
+    private var methodOfSort: Int = 0
     private val LOADER_ID = 170
+//    private var page = 1
+    //private var isLoading = false
     private lateinit var loaderManager: LoaderManager
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,10 +78,9 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
         })
 //        adapter.setReachEndListener(object : MovieAdapter.ReachEndListener {
 //            override fun onReachEnd() {
-//                Toast.makeText(
-//                    this@MainActivity,
-//                    "The end of list", Toast.LENGTH_SHORT
-//                ).show()
+//                if(!isLoading) {
+//                    downloadData(methodOfSort, page)
+//                }
 //            }
 //        })
         rV.adapter = adapter
@@ -85,6 +88,7 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
         switch.isChecked = true
         switch.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+//                page = 1
                 setMethodOfSort(isChecked)
             }
         })
@@ -100,13 +104,11 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
 
         val movieLiveData = viewModel.movie
         movieLiveData.observe(this) { mov ->
-            adapter.movies = mov
-            adapter.notifyDataSetChanged()
         }
     }
 
     fun setMethodOfSort(isChecked: Boolean) {
-        val methodOfSort = if (isChecked) {
+        methodOfSort = if (isChecked) {
             popularity.setTextColor(resources.getColor(R.color.white))
             top_rated.setTextColor(resources.getColor(R.color.rose))
             NetworkUtils.TOP_RATED
@@ -126,7 +128,13 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<JSONObject?> {
-        return NetworkUtils.Companion.JSONLoader(this, args)
+        val loader = NetworkUtils.Companion.JSONLoader(this, args)
+//        loader.setOnStartLoadingListener(object: NetworkUtils.Companion.JSONLoader.OnStartLoadingListener{
+//            override fun onStartLoading() {
+//                isLoading = true
+//            }
+//        })
+        return loader
     }
 
     override fun onLoadFinished(loader: Loader<JSONObject>, data: JSONObject?) {
@@ -136,8 +144,13 @@ class MainActivity : AppCompatActivity(), LoaderManager.LoaderCallbacks<JSONObje
             for (movie in jsonArray) {
                 viewModel.insertMovie(movie)
             }
+            adapter.movies = jsonArray
+            adapter.notifyDataSetChanged()
+//            page++
         }
+//        isLoading = false
         loaderManager.destroyLoader(LOADER_ID)
+
     }
 
     override fun onLoaderReset(loader: Loader<JSONObject>) {

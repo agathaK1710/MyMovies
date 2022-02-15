@@ -11,21 +11,21 @@ import com.squareup.picasso.Picasso
 
 class MovieAdapter(var movies: List<Movie>) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
     private lateinit var posterClickListener: PosterClickListener
-    //private lateinit var reachEndListener: ReachEndListener
+//    private lateinit var reachEndListener: ReachEndListener
 
-    interface PosterClickListener{
-        fun onPosterClick(position: Int){}
-    }
-    
-    interface ReachEndListener{
-        fun onReachEnd(){}
+    interface PosterClickListener {
+        fun onPosterClick(position: Int) {}
     }
 
-    fun setPosterClickListener(posterListener: PosterClickListener){
+//    interface ReachEndListener {
+//        fun onReachEnd() {}
+//    }
+
+    fun setPosterClickListener(posterListener: PosterClickListener) {
         posterClickListener = posterListener
     }
 
-//    fun setReachEndListener(reachListener: ReachEndListener){
+//    fun setReachEndListener(reachListener: ReachEndListener) {
 //        reachEndListener = reachListener
 //    }
 
@@ -39,7 +39,7 @@ class MovieAdapter(var movies: List<Movie>) : RecyclerView.Adapter<MovieAdapter.
         holder.itemView.setOnClickListener {
             posterClickListener.onPosterClick(position)
         }
-//        if(position > movies.size - 4){
+//        if (movies.size >= 20 && position > movies.size - 4) {
 //            reachEndListener.onReachEnd()
 //        }
     }

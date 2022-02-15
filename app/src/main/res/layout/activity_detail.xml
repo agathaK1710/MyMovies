@@ -148,6 +148,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_video"
+            android:nestedScrollingEnabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/textViewDescription"
@@ -156,6 +157,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_review"
+            android:nestedScrollingEnabled="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/recycler_video"
